@@ -60,7 +60,6 @@ export default buildConfig({
   
   admin: {
     user: 'users',
-    css: path.resolve(__dirname, './admin-custom.css'),
     meta: {
       titleSuffix: '— Yönetim Paneli',
       description: 'Site yönetim paneli',
