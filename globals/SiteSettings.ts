@@ -43,10 +43,11 @@ export const SiteSettings: GlobalConfig = {
     {
       name: 'activeExamResult',
       type: 'relationship',
-      label: 'Aktif Sınav Sonucu',
+      label: 'Aktif Sınav Sonuçları',
       relationTo: 'exam-results',
+      hasMany: true,
       admin: {
-        description: 'Gösterilecek sınav sonucunu seçin',
+        description: 'Slider içinde gösterilecek sınav sonuçlarını seçin',
         condition: (data) => data.activeContentType === 'exam-results',
       },
     },

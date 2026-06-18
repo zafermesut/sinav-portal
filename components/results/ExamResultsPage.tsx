@@ -1,16 +1,48 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Lightbox from '../ui/Lightbox'
 import ExcelViewer from '../ui/ExcelViewer'
 import type { ExamResult } from '@/payload-types'
 
 interface ExamResultsPageProps {
-  examResult: ExamResult
+  examResults: ExamResult[]
 }
 
-export default function ExamResultsPage({ examResult }: ExamResultsPageProps) {
+export default function ExamResultsPage({ examResults }: ExamResultsPageProps) {
+  const [activeIndex, setActiveIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const examResult = examResults[activeIndex]
+  const hasMultipleResults = examResults.length > 1
+
+  useEffect(() => {
+    if (!hasMultipleResults || lightboxOpen) {
+      return
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((currentIndex) => (currentIndex + 1) % examResults.length)
+    }, 10000)
+
+    return () => window.clearInterval(timer)
+  }, [examResults.length, hasMultipleResults, lightboxOpen])
+
+  if (!examResult) {
+    return null
+  }
+
+  const showResult = (index: number) => {
+    setActiveIndex(index)
+    setLightboxOpen(false)
+  }
+
+  const showPreviousResult = () => {
+    showResult((activeIndex - 1 + examResults.length) % examResults.length)
+  }
+
+  const showNextResult = () => {
+    showResult((activeIndex + 1) % examResults.length)
+  }
 
   const bgImage =
     examResult.backgroundImage &&
@@ -96,10 +128,76 @@ export default function ExamResultsPage({ examResult }: ExamResultsPageProps) {
               {examResult.description}
             </p>
           )}
+
+          {hasMultipleResults && (
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={showPreviousResult}
+                aria-label="Önceki sınav sonucu"
+                className="w-11 h-11 inline-flex items-center justify-center rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  color: 'rgba(255,255,255,0.72)',
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+
+              <div
+                className="flex max-w-full items-center gap-2 overflow-x-auto rounded-2xl px-3 py-2"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              >
+                {examResults.map((result, index) => {
+                  const isActive = index === activeIndex
+
+                  return (
+                    <button
+                      key={result.id}
+                      type="button"
+                      onClick={() => showResult(index)}
+                      className="h-10 max-w-52 shrink-0 rounded-xl px-3 text-xs font-semibold transition-all"
+                      style={{
+                        background: isActive ? 'rgba(99,102,241,0.75)' : 'rgba(255,255,255,0.04)',
+                        border: isActive
+                          ? '1px solid rgba(165,180,252,0.8)'
+                          : '1px solid rgba(255,255,255,0.08)',
+                        color: isActive ? '#ffffff' : 'rgba(255,255,255,0.56)',
+                      }}
+                    >
+                      <span className="block truncate">{result.title}</span>
+                    </button>
+                  )
+                })}
+              </div>
+
+              <button
+                type="button"
+                onClick={showNextResult}
+                aria-label="Sonraki sınav sonucu"
+                className="w-11 h-11 inline-flex items-center justify-center rounded-xl transition-all hover:scale-105"
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  color: 'rgba(255,255,255,0.72)',
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Main content */}
-        <div className="flex-1 px-4 pb-16 max-w-6xl mx-auto w-full">
+        <div className="flex-1 px-4 pb-16 max-w-full mx-auto w-full">
           {/* Result image */}
           {resultImage?.url && (
             <div className="mb-8">

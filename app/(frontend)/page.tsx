@@ -2,13 +2,14 @@ import { getPayload } from '@/lib/payload'
 import CountdownPage from '@/components/countdown/CountdownPage'
 import ExamResultsPage from '@/components/results/ExamResultsPage'
 import type { Countdown, ExamResult } from '@/payload-types'
+import Link from 'next/link'
 
 export const revalidate = 30 // Revalidate every 30 seconds
 
 export default async function HomePage() {
   let siteSettings = null
   let countdown: Countdown | null = null
-  let examResult: ExamResult | null = null
+  let examResults: ExamResult[] = []
 
   try {
     const payload = await getPayload()
@@ -33,17 +34,25 @@ export default async function HomePage() {
     }
 
     if (siteSettings?.activeContentType === 'exam-results' && siteSettings.activeExamResult) {
-      const id =
-        typeof siteSettings.activeExamResult === 'object'
-          ? siteSettings.activeExamResult.id
-          : siteSettings.activeExamResult
+      const selectedResults = Array.isArray(siteSettings.activeExamResult)
+        ? siteSettings.activeExamResult
+        : [siteSettings.activeExamResult]
 
-      const result = await payload.findByID({
-        collection: 'exam-results',
-        id,
-        depth: 2,
-      })
-      examResult = result as ExamResult
+      examResults = await Promise.all(
+        selectedResults.map(async (selectedResult) => {
+          if (typeof selectedResult === 'object') {
+            return selectedResult as ExamResult
+          }
+
+          const result = await payload.findByID({
+            collection: 'exam-results',
+            id: selectedResult,
+            depth: 2,
+          })
+
+          return result as ExamResult
+        }),
+      )
     }
   } catch (error) {
     console.error('Failed to load site settings:', error)
@@ -58,8 +67,8 @@ export default async function HomePage() {
     return <CountdownPage countdown={countdown} />
   }
 
-  if (siteSettings.activeContentType === 'exam-results' && examResult) {
-    return <ExamResultsPage examResult={examResult} />
+  if (siteSettings.activeContentType === 'exam-results' && examResults.length > 0) {
+    return <ExamResultsPage examResults={examResults} />
   }
 
   return <NoContentPlaceholder contentType={siteSettings.activeContentType} />
@@ -80,13 +89,13 @@ function SetupPlaceholder() {
           Site henüz yapılandırılmamış. Lütfen veritabanı bağlantısını kontrol edin ve yönetim
           paneline giriş yapın.
         </p>
-        <a
+        <Link
           href="/admin"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium"
           style={{ background: 'rgba(99,102,241,0.8)', color: 'white' }}
         >
           Yönetim Paneli →
-        </a>
+        </Link>
       </div>
     </div>
   )
@@ -108,13 +117,13 @@ function NoContentPlaceholder({ contentType }: { contentType: string }) {
           Yayın türü <strong className="text-white/60">{label}</strong> olarak seçili, ancak aktif
           bir içerik belirlenmemiş. Lütfen yönetim panelinden bir içerik seçin.
         </p>
-        <a
+        <Link
           href="/admin"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium"
           style={{ background: 'rgba(99,102,241,0.8)', color: 'white' }}
         >
           Yönetim Paneli →
-        </a>
+        </Link>
       </div>
     </div>
   )
