@@ -178,6 +178,8 @@ export interface Countdown {
 export interface Media {
   id: number;
   alt?: string | null;
+  _key?: string | null;
+  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -191,6 +193,7 @@ export interface Media {
   focalY?: number | null;
   sizes?: {
     thumbnail?: {
+      _key?: string | null;
       url?: string | null;
       width?: number | null;
       height?: number | null;
@@ -199,6 +202,7 @@ export interface Media {
       filename?: string | null;
     };
     large?: {
+      _key?: string | null;
       url?: string | null;
       width?: number | null;
       height?: number | null;
@@ -390,6 +394,8 @@ export interface ExamResultsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  _key?: T;
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -407,6 +413,7 @@ export interface MediaSelect<T extends boolean = true> {
         thumbnail?:
           | T
           | {
+              _key?: T;
               url?: T;
               width?: T;
               height?: T;
@@ -417,6 +424,7 @@ export interface MediaSelect<T extends boolean = true> {
         large?:
           | T
           | {
+              _key?: T;
               url?: T;
               width?: T;
               height?: T;

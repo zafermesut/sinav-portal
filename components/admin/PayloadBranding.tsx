@@ -6,11 +6,11 @@ export function PayloadIcon() {
   return (
     <img
       src={logoSrc}
-      alt="Sağlam Akademi"
+      alt="Sağlam Ajans"
       style={{
         display: 'block',
-        height: 32,
-        width: 32,
+        height: 48,
+        width: 48,
         objectFit: 'contain',
       }}
     />
@@ -21,7 +21,7 @@ export function PayloadLogo() {
   return (
     <img
       src={logoSrc}
-      alt="Sağlam Akademi"
+      alt="Sağlam Ajans"
       style={{
         display: 'block',
         height: 72,
