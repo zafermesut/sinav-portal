@@ -5,6 +5,7 @@
     "": {
       "name": "project",
       "dependencies": {
+        "@img/sharp-linux-x64": "^0.35.1",
         "@payloadcms/db-postgres": "^3.85.1",
         "@payloadcms/next": "^3.85.1",
         "@payloadcms/richtext-lexical": "^3.85.1",
