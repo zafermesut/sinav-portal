@@ -1,6 +1,7 @@
 import { buildConfig } from 'payload'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -101,6 +102,18 @@ export default buildConfig({
       fileSize: 50 * 1024 * 1024,
     },
   },
+  plugins: [
+    uploadthingStorage({
+      collections: {
+        media: true,
+      },
+      clientUploads: true,
+      options: {
+        token: process.env.UPLOADTHING_TOKEN,
+        acl: 'public-read',
+      },
+    }),
+  ],
   serverURL,
   cors: allowedOrigins,
   csrf: allowedOrigins,
