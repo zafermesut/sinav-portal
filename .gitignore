@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+dist/
+.env
+.env.local
+.env.*.local
+payload-types.ts
+public/media/
+npm-debug.log*
+.DS_Store
+.vercel
