@@ -4,6 +4,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import sharp from 'sharp' // 👈 1. ADIM: Sharp kütüphanesini buraya import et
 
 import { Countdowns } from './collections/Countdowns'
 import { ExamResults } from './collections/ExamResults'
@@ -109,15 +110,16 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
+  sharp, // 👈 2. ADIM: Payload'a resim boyutlandırması (thumbnail vb.) için sharp'ı teslim et
   upload: {
     limits: {
       fileSize: 50 * 1024 * 1024,
     },
   },
-  plugins: [
+ plugins: [
     uploadthingStorage({
       collections: {
-        media: true,
+        media: true, // 👈 Sadece true bırakman yeterli, eklenti arka planda yerel kaydı zaten override ediyor.
       },
       clientUploads: true,
       options: {
