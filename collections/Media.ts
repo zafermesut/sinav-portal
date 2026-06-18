@@ -11,7 +11,7 @@ export const Media: CollectionConfig = {
     plural: 'Medya',
   },
   upload: {
-    staticDir: 'tmp', 
+    staticDir: 'media', 
     mimeTypes: [
       'image/jpeg',
       'image/png',
