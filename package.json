@@ -39,5 +39,9 @@
   },
   "overrides": {
     "uploadthing": "7.7.4"
+  },
+  "supportedArchitectures": {
+    "os": ["current", "linux"],
+    "cpu": ["current", "x64", "arm64"]
   }
 }

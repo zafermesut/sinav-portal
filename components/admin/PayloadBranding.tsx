@@ -9,8 +9,8 @@ export function PayloadIcon() {
       alt="Sağlam Ajans"
       style={{
         display: 'block',
-        height: 48,
-        width: 48,
+        height: 60,
+        width: 60,
         objectFit: 'contain',
       }}
     />
