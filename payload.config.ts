@@ -67,6 +67,18 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      graphics: {
+        Icon: {
+          path: '@/components/admin/PayloadBranding',
+          exportName: 'PayloadIcon',
+        },
+        Logo: {
+          path: '@/components/admin/PayloadBranding',
+          exportName: 'PayloadLogo',
+        },
+      },
+    },
   },
   collections: [
     Countdowns,
