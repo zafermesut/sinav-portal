@@ -28,7 +28,7 @@ export default async function HomePage() {
       const result = await payload.findByID({
         collection: 'countdowns',
         id,
-        depth: 2,
+        depth: 4,
       })
       countdown = result as Countdown
     }
